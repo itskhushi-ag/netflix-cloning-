@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NovaFlix – Netflix Clone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #141414;
+      --accent: #e50914;
+      --text: #fff;
+      --bg-dark: #000;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Roboto", sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 10%, rgba(0, 0, 0, 0));
+      z-index: 50;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    nav ul {
+      display: flex;
+      gap: 25px;
+      list-style: none;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .btn-signin {
+      background: var(--accent);
+      padding: 8px 18px;
+      border-radius: 4px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .hero {
+      height: 100vh;
+      background: url("https://images.unsplash.com/photo-1498550744927-f9e7ad3b9d5c?auto=format&fit=crop&w=1350&q=80") center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-content {
+      position: relative;
+      max-width: 600px;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 30px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      padding: 14px 28px;
+      font-size: 1.1rem;
+      border-radius: 4px;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #bf0810;
+    }
+
+    .section {
+      padding: 80px 40px;
+    }
+
+    .category-title {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding-bottom: 10px;
+    }
+
+    .row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .card {
+      min-width: 200px;
+      height: 120px;
+      background: #333;
+      border-radius: 4px;
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.1);
+    }
+
+    .arrows {
+      display: flex;
+      gap: 10px;
+      position: absolute;
+      right: 40px;
+      top: -50px;
+    }
+
+    .arrow-btn {
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      color: #fff;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section-wrapper {
+      position: relative;
+    }
+
+    footer {
+      padding: 60px 40px;
+      background: #111;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    footer a {
+      color: #aaa;
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      .hero p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="logo">NovaFlix</span>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Series</a></li>
+        <li><a href="#">Movies</a></li>
+        <li><a href="#">My List</a></li>
+      </ul>
+    </nav>
+    <a href="#" class="btn-signin">Sign In</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Unlimited movies, TV shows and more.</h1>
+      <p>Watch anywhere. Cancel anytime.</p>
+      <button class="btn-primary">Get Started</button>
+    </div>
+  </section>
+
+  <div class="section" id="content"></div>
+
+  <footer>
+    <p>
+      Made with ❤️ by Nova. This is an educational clone inspired by Netflix UI.
+      All content is for demonstration purposes only.
+    </p>
+    <p>Images courtesy of Unsplash and TMDB.</p>
+  </footer>
+
+  <script>
+    // Sample data
+    const movies = [
+      "https://image.tmdb.org/t/p/w500/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg",
+      "https://image.tmdb.org/t/p/w500/eSkujSnQTlyjwYJeWkz4ZTEKcuX.jpg",
+      "https://image.tmdb.org/t/p/w500/9O1Iy9od7WJH8eCYV3NAvIfByW5.jpg",
+      "https://image.tmdb.org/t/p/w500/wjnkaNkCcGUmcuJwlRGYpsuh6LE.jpg",
+      "https://image.tmdb.org/t/p/w500/pwGmXVKUgKN13psUjlhC9zRcqwc.jpg",
+      "https://image.tmdb.org/t/p/w500/GxWfM6B2Np1prQh2I7ysCma3yIZ.jpg",
+      "https://image.tmdb.org/t/p/w500/6gbKnowKoEurpanPC9TAHf3mY7.jpg",
+      "https://image.tmdb.org/t/p/w500/owIN1fiJSJrRZG6lzh7XgJUE96V.jpg",
+      "https://image.tmdb.org/t/p/w500/aWxwnYoe8p2d2fcxOqtvAtJ72Rw.jpg",
+      "https://image.tmdb.org/t/p/w500/8ZT2zC7dXT9ZU8aWQ83pAY7Zps.jpg",
+    ];
+
+    const categories = [
+      "Trending Now",
+      "Top Rated",
+      "Action & Adventure",
+      "Comedies",
+      "Documentaries",
+    ];
+
+    const contentDiv = document.getElementById("content");
+
+    categories.forEach((category) => {
+      const sectionWrapper = document.createElement("div");
+      sectionWrapper.className = "section-wrapper";
+
+      const title = document.createElement("h3");
+      title.className = "category-title";
+      title.textContent = category;
+
+      const row = document.createElement("div");
+      row.className = "row";
+
+      movies.forEach((url) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.backgroundImage = `url(${url})`;
+        row.appendChild(card);
+      });
+
+      const arrows = document.createElement("div");
+      arrows.className = "arrows";
+      const leftBtn = document.createElement("button");
+      leftBtn.className = "arrow-btn";
+      leftBtn.innerHTML = "&#8249;";
+      const rightBtn = document.createElement("button");
+      rightBtn.className = "arrow-btn";
+      rightBtn.innerHTML = "&#8250;";
+
+      leftBtn.addEventListener("click", () =>
+        row.scrollBy({ left: -300, behavior: "smooth" })
+      );
+      rightBtn.addEventListener("click", () =>
+        row.scrollBy({ left: 300, behavior: "smooth" })
+      );
+
+      arrows.appendChild(leftBtn);
+      arrows.appendChild(rightBtn);
+
+      sectionWrapper.appendChild(title);
+      sectionWrapper.appendChild(arrows);
+      sectionWrapper.appendChild(row);
+      contentDiv.appendChild(sectionWrapper);
+    });
+
+    // Simple click modal
+    const createModal = (img) => {
+      const overlay = document.createElement("div");
+      overlay.style.cssText =
+        "position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:100";
+      const box = document.createElement("div");
+      box.style.cssText = "max-width:90%;max-height:90%";
+      const image = document.createElement("img");
+      image.src = img;
+      image.style.cssText = "width:100%;height:auto;border-radius:6px";
+      overlay.appendChild(box);
+      box.appendChild(image);
+      overlay.addEventListener("click", () => overlay.remove());
+      document.body.appendChild(overlay);
+    };
+
+    document.querySelectorAll(".card").forEach((card) => {
+      card.addEventListener("click", () =>
+        createModal(card.style.backgroundImage.slice(5, -2))
+      );
+    });
+  </script>
+</body>
+</html>
